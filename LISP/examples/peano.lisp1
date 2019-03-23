@@ -1,0 +1,6 @@
+zero[] = Z
+succ[n] = cons[S;n]
+nat[n] = or[equal[n;Z];and[equal[car[n];S];nat[cdr[n]]]]
+add[n;m] = [equal[n;Z]→m;T→cons[S;add[cdr[n];m]]]
+length[xs] = [null[xs]→Z;T→succ[length[cdr[xs]]]]
+EXPORT

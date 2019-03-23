@@ -1,0 +1,8 @@
+apply[f;args] = eval[cons[f;appq[args]];NIL]
+appq[m] = [null[m]→NIL;atom[m]→list2[QUOTE;m];T→cons[appq[car[m]];appq[cdr[m]]]]
+quotetree[q] = [null[q]→T;atom[q]→F;atom[cdr[q]]→F;T→[and[and[atom[car[q]];atom[cadr[q]]];null[cddr[q]]]→eq[car[q];QUOTE];T→and[quotetree[car[q]];quotetree[cdr[q]]]]]
+stripquotes[q] = [null[q]→NIL;T→[and[and[atom[car[q]];atom[cadr[q]]];null[cddr[q]]]→cadr[q];T→cons[stripquotes[car[q]];stripquotes[cdr[q]]]]]
+eval[e;a] = [atom[e]→assoc[e;a];atom[car[e]]→[eq[car[e];QUOTE]→cadr[e];eq[car[e];ATOM]→atom[eval[cadr[e];a]];eq[car[e];EQ]→equal[eval[cadr[e];a];eval[caddr[e];a]];eq[car[e];COND]→evcon[cdr[e];a];eq[car[e];CAR]→car[eval[cadr[e];a]];eq[car[e];CDR]→cdr[eval[cadr[e];a]];eq[car[e];CONS]→cons[eval[cadr[e];a];eval[caddr[e];a]];T→eval[cons[assoc[car[e];a];evlis[cdr[e];a]];a]];eq[caar[e];LABEL]→eval[cons[caddar[e];cdr[e]];cons[list2[cadar[e];car[e]];a]];eq[caar[e];LAMBDA]→eval[caddar[e];append[pair[cadar[e];evlis[cdr[e];a]];a]];quotetree[e]→e]
+evcon[c;a] = [eval[caar[c];a]→eval[cadar[c];a];T→evcon[cdr[c];a]]
+evlis[m;a] = [null[m]→NIL;T→cons[eval[car[m];a];evlis[cdr[m];a]]]
+EXPORT
